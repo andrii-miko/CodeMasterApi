@@ -1,8 +1,13 @@
-package com.codemasterapi.dtos;
+package com.codemasterapi.dtos.user;
 
-public class LoginDTO {
+public class RegisterDTO {
+    private String username;
     private String email;
     private String password;
+
+    public String getUsername() {
+        return username;
+    }
 
     public String getEmail() {
         return email;
@@ -10,6 +15,10 @@ public class LoginDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {

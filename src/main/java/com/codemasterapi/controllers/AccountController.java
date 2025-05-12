@@ -1,7 +1,7 @@
 package com.codemasterapi.controllers;
 
-import com.codemasterapi.dtos.LoginDTO;
-import com.codemasterapi.dtos.RegisterDTO;
+import com.codemasterapi.dtos.user.LoginDTO;
+import com.codemasterapi.dtos.user.RegisterDTO;
 import com.codemasterapi.models.UserEntity;
 import com.codemasterapi.repositories.UserRepository;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
