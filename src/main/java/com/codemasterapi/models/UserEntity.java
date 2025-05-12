@@ -27,15 +27,27 @@ public class UserEntity {
     @Column(name = "role")
     private Set<String> roles = new HashSet<>();
 
+    @Column(name = "total_points")
+    private int totalPoints;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Solution> solutions = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<UserRating> ratings = new HashSet<>();
+
     public UserEntity() {
     }
 
-    public UserEntity(UUID id, String username, String email, String password, Set<String> roles) {
+    public UserEntity(UUID id, String username, String email, String password, Set<String> roles, int totalPoints, Set<Solution> solutions, Set<UserRating> ratings) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.roles = roles;
+        this.totalPoints = totalPoints;
+        this.solutions = solutions;
+        this.ratings = ratings;
     }
 
     public UUID getId() {
@@ -78,4 +90,27 @@ public class UserEntity {
         this.roles = roles;
     }
 
+    public int getTotalPoints() {
+        return totalPoints;
+    }
+
+    public void setTotalPoints(int totalPoints) {
+        this.totalPoints = totalPoints;
+    }
+
+    public Set<Solution> getSolutions() {
+        return solutions;
+    }
+
+    public void setSolutions(Set<Solution> solutions) {
+        this.solutions = solutions;
+    }
+
+    public Set<UserRating> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(Set<UserRating> ratings) {
+        this.ratings = ratings;
+    }
 }
