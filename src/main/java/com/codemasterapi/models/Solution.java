@@ -22,12 +22,6 @@ public class Solution {
     @Column(name = "is_successful")
     private boolean isSuccessful;
 
-    @Column(name = "points")
-    private int points;
-
-    @Column(name = "submission_time")
-    private LocalDateTime submissionTime;
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
@@ -39,13 +33,11 @@ public class Solution {
     public Solution() {
     }
 
-    public Solution(UUID id, String code, String language, boolean isSuccessful, int points, LocalDateTime submissionTime, UserEntity user, Task task) {
+    public Solution(UUID id, String code, String language, boolean isSuccessful, UserEntity user, Task task) {
         this.id = id;
         this.code = code;
         this.language = language;
         this.isSuccessful = isSuccessful;
-        this.points = points;
-        this.submissionTime = submissionTime;
         this.user = user;
         this.task = task;
     }
@@ -82,21 +74,6 @@ public class Solution {
         isSuccessful = successful;
     }
 
-    public int getPoints() {
-        return points;
-    }
-
-    public void setPoints(int points) {
-        this.points = points;
-    }
-
-    public LocalDateTime getSubmissionTime() {
-        return submissionTime;
-    }
-
-    public void setSubmissionTime(LocalDateTime submissionTime) {
-        this.submissionTime = submissionTime;
-    }
 
     public UserEntity getUser() {
         return user;
