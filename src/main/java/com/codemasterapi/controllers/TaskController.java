@@ -2,7 +2,9 @@ package com.codemasterapi.controllers;
 
 import com.codemasterapi.dtos.task.TaskRequestDTO;
 import com.codemasterapi.dtos.task.TaskResponseDTO;
+import com.codemasterapi.dtos.testCase.TestCaseDTO;
 import com.codemasterapi.models.Task;
+import com.codemasterapi.models.TestCase;
 import com.codemasterapi.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +37,9 @@ public class TaskController {
     @PostMapping
     public TaskResponseDTO createTask(@RequestBody TaskRequestDTO taskRequestDTO) {
         Task task = convertToEntity(taskRequestDTO);
-        return convertToResponseDTO(taskService.createTask(task));
+        return convertToResponseDTO(
+                taskService.createTask(task, taskRequestDTO.getTestCases())
+        );
     }
 
     @PatchMapping("/{id}")
@@ -62,6 +66,16 @@ public class TaskController {
         dto.setInputDescription(task.getInputDescription());
         dto.setOutputDescription(task.getOutputDescription());
         dto.setDifficulty(task.getDifficulty());
+        if (task.getTestCases() != null) {
+            dto.setTestCases(
+                    task.getTestCases().stream().map(tc -> {
+                        TestCaseDTO testCaseDTO = new TestCaseDTO();
+                        testCaseDTO.setInput(tc.getInput());
+                        testCaseDTO.setExpectedOutput(tc.getExpectedOutput());
+                        return testCaseDTO;
+                    }).collect(Collectors.toList())
+            );
+        }
         return dto;
     }
 
@@ -72,6 +86,16 @@ public class TaskController {
         task.setInputDescription(dto.getInputDescription());
         task.setOutputDescription(dto.getOutputDescription());
         task.setDifficulty(dto.getDifficulty());
+        if (dto.getTestCases() != null) {
+            List<TestCase> testCases = dto.getTestCases().stream().map(tcDto -> {
+                TestCase testCase = new TestCase();
+                testCase.setInput(tcDto.getInput());
+                testCase.setExpectedOutput(tcDto.getExpectedOutput());
+                testCase.setTask(task);
+                return testCase;
+            }).collect(Collectors.toList());
+            task.setTestCases(testCases);
+        }
         return task;
     }
 }

@@ -19,9 +19,6 @@ public class TestCase {
     @Column(name = "expected_output")
     private String expectedOutput;
 
-    @Column(name = "is_public")
-    private boolean isPublic;
-
     @ManyToOne
     @JoinColumn(name = "task_id")
     private Task task;
@@ -29,11 +26,10 @@ public class TestCase {
     public TestCase() {
     }
 
-    public TestCase(UUID id, String input, String expectedOutput, boolean isPublic, Task task) {
+    public TestCase(UUID id, String input, String expectedOutput, Task task) {
         this.id = id;
         this.input = input;
         this.expectedOutput = expectedOutput;
-        this.isPublic = isPublic;
         this.task = task;
     }
 
@@ -59,14 +55,6 @@ public class TestCase {
 
     public void setExpectedOutput(String expectedOutput) {
         this.expectedOutput = expectedOutput;
-    }
-
-    public boolean isPublic() {
-        return isPublic;
-    }
-
-    public void setPublic(boolean aPublic) {
-        isPublic = aPublic;
     }
 
     public Task getTask() {

@@ -1,11 +1,16 @@
 package com.codemasterapi.dtos.task;
 
+import com.codemasterapi.dtos.testCase.TestCaseDTO;
+
+import java.util.List;
+
 public class TaskRequestDTO {
     private String title;
     private String description;
     private String inputDescription;
     private String outputDescription;
     private String difficulty;
+    private List<TestCaseDTO> testCases;
 
     public String getTitle() {
         return title;
@@ -45,5 +50,13 @@ public class TaskRequestDTO {
 
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
+    }
+
+    public List<TestCaseDTO> getTestCases() {
+        return testCases;
+    }
+
+    public void setTestCases(List<TestCaseDTO> testCases) {
+        this.testCases = testCases;
     }
 }
