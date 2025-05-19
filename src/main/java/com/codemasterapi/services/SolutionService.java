@@ -31,6 +31,8 @@ public class SolutionService {
         boolean allPassed = true;
         for (TestCase testCase : task.getTestCases()) {
             String output = codeExecutor.execute(dto.getCode(), dto.getLanguage(), testCase.getInput());
+            System.out.println("Output: " + output);
+            System.out.println("Expected Output: " + testCase.getExpectedOutput());
             if (!output.trim().equals(testCase.getExpectedOutput().trim())) {
                 allPassed = false;
                 break;
