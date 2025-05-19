@@ -2,6 +2,7 @@ package com.codemasterapi.controllers;
 
 import com.codemasterapi.dtos.user.LoginDTO;
 import com.codemasterapi.dtos.user.RegisterDTO;
+import com.codemasterapi.dtos.user.UserResponseDto;
 import com.codemasterapi.models.UserEntity;
 import com.codemasterapi.repositories.UserRepository;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
@@ -70,10 +71,11 @@ public class AccountController {
             if (optionalUser.isPresent()) {
                 UserEntity user = optionalUser.get();
                 String jwtToken = createJWTToken(user);
+                var userResponseDto = toUserResponseDto(user);
 
                 var response = new HashMap<String, Object>();
                 response.put("token", jwtToken);
-                response.put("user", user);
+                response.put("user", userResponseDto);
 
                 return ResponseEntity.ok(response);
             } else {
@@ -95,7 +97,8 @@ public class AccountController {
 
         if (optionalUser.isPresent()) {
             var user = optionalUser.get();
-            response.put("User", user);
+            var userResponseDto = toUserResponseDto(user);
+            response.put("User", userResponseDto);
             return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.badRequest().body("User not found");
@@ -131,10 +134,11 @@ public class AccountController {
 
             userRepository.save(user);
             String jwtToken = createJWTToken(user);
+            var userResponseDto = toUserResponseDto(user);
 
             var response = new HashMap<String, Object>();
             response.put("token", jwtToken);
-            response.put("user", user);
+            response.put("user", userResponseDto);
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -156,5 +160,15 @@ public class AccountController {
         var encoder = new NimbusJwtEncoder(new ImmutableSecret<>(jwtSecretKey.getBytes()));
         var params = JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims);
         return encoder.encode(params).getTokenValue();
+    }
+
+    private UserResponseDto toUserResponseDto(UserEntity user) {
+        UserResponseDto dto = new UserResponseDto();
+        dto.setId(user.getId());
+        dto.setUsername(user.getUsername());
+        dto.setEmail(user.getEmail());
+        dto.setRoles(user.getRoles());
+        dto.setTotalPoints(user.getTotalPoints());
+        return dto;
     }
 }
