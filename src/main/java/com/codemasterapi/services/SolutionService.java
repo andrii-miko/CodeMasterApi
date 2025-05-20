@@ -31,8 +31,6 @@ public class SolutionService {
         boolean allPassed = true;
         for (TestCase testCase : task.getTestCases()) {
             String output = codeExecutor.execute(dto.getCode(), dto.getLanguage(), testCase.getInput());
-            System.out.println("Output: " + output);
-            System.out.println("Expected Output: " + testCase.getExpectedOutput());
             if (!output.trim().equals(testCase.getExpectedOutput().trim())) {
                 allPassed = false;
                 break;
@@ -47,6 +45,21 @@ public class SolutionService {
         solution.setTask(task);
 
         Solution saved = solutionRepository.save(solution);
+        user.getSolutions().add(solution);
+        if(allPassed && !user.getSolutions().contains(solution)){
+            switch (task.getDifficulty()){
+                case "easy":
+                    user.setTotalPoints(user.getTotalPoints() + 100);
+                    break;
+                case "medium":
+                    user.setTotalPoints(user.getTotalPoints() + 200);
+                    break;
+                case "hard":
+                    user.setTotalPoints(user.getTotalPoints() + 300);
+                    break;
+            }
+        }
+        userRepository.save(user);
         return toDto(saved);
     }
 
