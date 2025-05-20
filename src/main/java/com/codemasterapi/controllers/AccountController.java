@@ -1,8 +1,11 @@
 package com.codemasterapi.controllers;
 
+import com.codemasterapi.dtos.task.TaskResponseDTO;
 import com.codemasterapi.dtos.user.LoginDTO;
 import com.codemasterapi.dtos.user.RegisterDTO;
 import com.codemasterapi.dtos.user.UserResponseDto;
+import com.codemasterapi.models.Solution;
+import com.codemasterapi.models.Task;
 import com.codemasterapi.models.UserEntity;
 import com.codemasterapi.repositories.UserRepository;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
@@ -23,10 +26,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -163,12 +164,36 @@ public class AccountController {
     }
 
     private UserResponseDto toUserResponseDto(UserEntity user) {
-        UserResponseDto dto = new UserResponseDto();
-        dto.setId(user.getId());
-        dto.setUsername(user.getUsername());
-        dto.setEmail(user.getEmail());
-        dto.setRoles(user.getRoles());
-        dto.setTotalPoints(user.getTotalPoints());
-        return dto;
+        UserResponseDto userdto = new UserResponseDto();
+        userdto.setId(user.getId());
+        userdto.setUsername(user.getUsername());
+        userdto.setEmail(user.getEmail());
+        userdto.setRoles(user.getRoles());
+        userdto.setTotalPoints(user.getTotalPoints());
+
+        List<TaskResponseDTO> solvedProblems = user.getSolutions().stream()
+                .filter(Solution::isSuccessful)
+                .map(solution -> {
+                    Task task = solution.getTask();
+                    TaskResponseDTO taskDto = new TaskResponseDTO();
+                    taskDto.setId(task.getId());
+                    taskDto.setTitle(task.getTitle());
+                    taskDto.setDescription(task.getDescription());
+                    taskDto.setInputDescription(task.getInputDescription());
+                    taskDto.setOutputDescription(task.getOutputDescription());
+                    taskDto.setDifficulty(task.getDifficulty());
+                    return taskDto;
+                })
+                .collect(Collectors.toMap(
+                        TaskResponseDTO::getId,
+                        dto -> dto,
+                        (dto1, dto2) -> dto1
+                ))
+                .values()
+                .stream()
+                .toList();
+
+        userdto.setSolvedProblems(solvedProblems);
+        return userdto;
     }
 }

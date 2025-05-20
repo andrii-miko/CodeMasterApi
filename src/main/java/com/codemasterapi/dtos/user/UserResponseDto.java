@@ -1,5 +1,8 @@
 package com.codemasterapi.dtos.user;
 
+import com.codemasterapi.dtos.task.TaskResponseDTO;
+
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -9,6 +12,7 @@ public class UserResponseDto {
     private String email;
     private Set<String> roles;
     private int totalPoints;
+    private List<TaskResponseDTO> solvedProblems;
 
     public UUID getId() {
         return id;
@@ -48,5 +52,13 @@ public class UserResponseDto {
 
     public void setTotalPoints(int totalPoints) {
         this.totalPoints = totalPoints;
+    }
+
+    public List<TaskResponseDTO> getSolvedProblems() {
+        return solvedProblems;
+    }
+
+    public void setSolvedProblems(List<TaskResponseDTO> solvedProblems) {
+        this.solvedProblems = solvedProblems;
     }
 }
