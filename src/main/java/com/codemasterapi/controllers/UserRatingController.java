@@ -4,8 +4,11 @@ import com.codemasterapi.dtos.rating.UserRatingRequestDto;
 import com.codemasterapi.dtos.rating.UserRatingResponseDto;
 import com.codemasterapi.services.UserRatingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/user-ratings")
@@ -17,5 +20,16 @@ public class UserRatingController {
     public UserRatingResponseDto addRating(@RequestBody UserRatingRequestDto dto, Authentication auth) {
         String username = auth.getName();
         return userRatingService.addRating(dto, username);
+    }
+
+    @GetMapping("/task/{taskId}")
+    public ResponseEntity<UserRatingResponseDto> getRating(@PathVariable UUID taskId, Authentication auth) {
+        String username = auth.getName();
+        UserRatingResponseDto rating = userRatingService.getRating(taskId, username);
+        if (rating != null) {
+            return ResponseEntity.ok(rating);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
