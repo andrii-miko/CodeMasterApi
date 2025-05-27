@@ -11,6 +11,8 @@ import com.codemasterapi.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class UserRatingService {
     @Autowired
@@ -31,6 +33,17 @@ public class UserRatingService {
 
         UserRating saved = userRatingRepository.save(userRating);
         return toDto(saved);
+    }
+
+    public UserRatingResponseDto getRating(UUID taskId, String username) {
+        UserEntity user = userRepository.findByUsername(username).orElseThrow();
+        Task task = taskRepository.findById(taskId).orElseThrow();
+
+        UserRating userRating = userRatingRepository.findByUserAndTask(user, task);
+        if (userRating == null) {
+            return null;
+        }
+        return toDto(userRating);
     }
 
     public UserRatingResponseDto toDto(UserRating userRating) {

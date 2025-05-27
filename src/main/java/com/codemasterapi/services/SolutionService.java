@@ -41,12 +41,9 @@ public class SolutionService {
         solution.setCode(dto.getCode());
         solution.setLanguage(dto.getLanguage());
         solution.setSuccessful(allPassed);
-        solution.setUser(user);
-        solution.setTask(task);
 
         Solution saved = solutionRepository.save(solution);
-        user.getSolutions().add(solution);
-        if(allPassed && !user.getSolutions().contains(solution)){
+        if (allPassed && user.getSolutions().stream().noneMatch(s -> s.getTask().equals(task))) {
             switch (task.getDifficulty()){
                 case "easy":
                     user.setTotalPoints(user.getTotalPoints() + 100);
@@ -59,6 +56,9 @@ public class SolutionService {
                     break;
             }
         }
+        solution.setUser(user);
+        solution.setTask(task);
+        user.getSolutions().add(solution);
         userRepository.save(user);
         return toDto(saved);
     }
